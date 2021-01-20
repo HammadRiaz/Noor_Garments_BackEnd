@@ -128,26 +128,24 @@ const deleteProduct = async (req, res, next)=>{
 const getCartByUserId = async (req, res, next) => {
     const userId = req.params.uid;
   
-    // let places;
-    let userWithPlaces;
+    let userWithCart;
     try {
-      userWithPlaces = await User.findById(userId).populate('Cart');
+      userWithCart = await User.findById(userId).populate('Cart');
     } catch (err) {
       const error = new HttpError(
-        'Fetching places failed, please try again later.',
+        'Fetching Cart failed, please try again later.',
         500
       );
       return next(error);
     }
   
-    // if (!places || places.length === 0) {
-    if (!userWithPlaces || userWithPlaces.places.length === 0) {
+    if (!userWithCart || userWithCart.Cart.length === 0) {
       return next(
-        new HttpError('Could not find places for the provided user id.', 404)
+        new HttpError('Could not find Cart for the provided user id.', 404)
       );
     }
   
-    res.json({ places: userWithPlaces.places.map(place => place.toObject({ getters: true })) });
+    res.json({ Cart: userWithCart.Cart.map(C => C.toObject({ getters: true })) });
   };
   
 exports.AddProduct = AddProduct;
